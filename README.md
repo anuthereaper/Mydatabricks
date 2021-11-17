@@ -7,7 +7,7 @@ Mount ADLS.py : Mount a ADLS to databricks using SPN
 
 PGP_encryption_py.py : PGP encryption using python
 
-PysparkBulkupload to Cosmos.py : Bulk upload to Cosmos using Pyspark
+PysparkBulkupload to Cosmos.py : Bulk upload to Cosmos using Pyspark. Needs the com.azure.cosmos.spark:azure-cosmos-spark_3-1_2-12:4.4.0 Maven library.
 
 RSA_encryption_py.py : RSA encryption using python
 
