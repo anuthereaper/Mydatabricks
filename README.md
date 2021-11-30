@@ -19,7 +19,7 @@ CREATE TABLE emptable(
 [start_date] [NVARCHAR] (MAX) NULL,
 [email] [NVARCHAR] (MAX) NULL,
 [phone] [DECIMAL] NULL
-)![image](https://user-images.githubusercontent.com/44308594/144025637-b73251c8-9466-4ecd-a42c-9d840fcf61d7.png)
+)
 
 PySpark_toMSSQL1.py : Load random data into SQL using Pyspark
 CREATE TABLE Mytable(
@@ -48,7 +48,7 @@ CREATE TABLE Mytable(
 [tripType] [INT] NULL,
 [puYear] [INT] NULL,
 [puMonth] [INT] NULL
-)![image](https://user-images.githubusercontent.com/44308594/144025448-7a25daf6-5860-4b27-92ec-70740a75581a.png)
+)
 
 
 RSA_encryption_py.py : RSA encryption using python
