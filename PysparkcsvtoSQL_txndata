@@ -1,0 +1,71 @@
+# Databricks notebook source
+# Fetch raw data
+import datetime
+import time
+import uuid
+from pyspark.sql.functions import udf
+from pyspark.sql.types import StringType, LongType
+
+print("Starting preparation: ", datetime.datetime.utcnow().strftime("%Y-%m-%d %H:%M:%S.%f"))
+# Azure storage access info
+blob_account_name = "anupyapp"
+blob_container_name = "mycontainer1"
+blob_relative_path = "RTSPdata.csv"  # file name
+#blob_sas_token = r""
+blob_sas_token = "sp=xxxxxxxxxxxxxxxxxxxxxxxxxxx"
+# Allow SPARK to read from Blob remotely
+wasbs_path = 'wasbs://%s@%s.blob.core.windows.net/%s' % (blob_container_name, blob_account_name, blob_relative_path)
+spark.conf.set(
+  'fs.azure.sas.%s.%s.blob.core.windows.net' % (blob_container_name, blob_account_name),
+  blob_sas_token)
+print('Remote blob path: ' + wasbs_path)
+# SPARK read parquet, note that it won't load any data yet by now
+# NOTE - if you want to experiment with larger dataset sizes - consider switching to Option B (commenting code 
+# for Option A/uncommenting code for option B) the lines below or increase the value passed into the 
+# limit function restricting the dataset size below
+ 
+df = spark.read.csv(wasbs_path, header='true')
+df.persist()
+df.show(5)
+df1 = df.drop("_c0")
+df1.show(5)
+
+# COMMAND ----------
+
+#Write from Spark to SQL table using the Apache Spark Connector for SQL Server and Azure SQL
+print("Use Apache Spark Connector for SQL Server and Azure SQL to write to master SQL instance ")
+servername = "jdbc:sqlserver://<server_name>.database.windows.net:1433"
+dbname = "<db_name>"
+url = servername + ";" + "databaseName=" + dbname + ";"
+dbtable = "<table_name>"
+user = "<user_name>"
+password = "<password>" # Please specify password here
+#com.microsoft.sqlserver.jdbc.spark
+try:
+     df1.write \
+    .format("com.microsoft.sqlserver.jdbc.spark") \
+    .mode("overwrite") \
+    .option("url", url) \
+    .option("dbtable", dbtable) \
+    .option("user", user) \
+    .option("password", password) \
+    .save()
+except ValueError as error :
+    print("Connector write failed", error)
+print("Connector write(overwrite) succeeded  ")
+
+# COMMAND ----------
+
+#Use mode as append
+#try:
+#  df.write \
+#    .format("com.microsoft.sqlserver.jdbc.spark") \
+#    .mode("append") \
+#    .option("url", url) \
+#    .option("dbtable", dbtable) \
+#    .option("user", user) \
+#    .option("password", password) \
+#    .save()
+#except ValueError as error :
+#    print("Connector write failed", error)
+#print("Connector write(append) succeeded  ")
