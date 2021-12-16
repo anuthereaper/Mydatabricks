@@ -1,4 +1,4 @@
-# Databricks notebook source
+# Databricks notebook source. Requires com.microsoft.azure:spark-mssql-connector_2.12:1.2.0
 # Fetch raw data
 import datetime
 import time
